@@ -4,7 +4,7 @@ Thanks for your interest in applying to join Frog's development department.  To 
 
 If you already have a portfolio of work where code sources are available (such as your own Github/Bitbucket profile) then you do not need to do this test to support your application: this test is for those people who do not have work to show us already.
 
-Once you're done, send us a link to your work - whether this is a fork, hosted on your own server, or a sandboxed online version (like jsfiddle or jsbin).
+Once you're done, send us a link to your work - whether this is a fork, hosted on your own server, or a sandboxed online version (like jsfiddle or jsbin) - but please note that we would like to see the source code, so this should be made available if hosted.
 
 ## The Exercise
 **The exercise within should not take you any longer than an hour.**
