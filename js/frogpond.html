@@ -1,122 +1,221 @@
 <!DOCTYPE html>
 <html>
-
-<style>
-  html, body { font-size: 16px; }
-  .frogPond { background-color: #0071b9; margin: 1em; padding: 1em; border: 0.125em solid aqua; border-radius: 0.5em; }
-  .frogPond h1 { text-align: center; }
-  .frogPond .actions { margin: 1em 0 0 0; padding: 0; }
-  .frogPond .actions button { display: inline-block; margin: 0 0.75em 0 0; background-color: aqua; border: 0.125em solid darkblue; padding: 0.25em; border-radius: 0.25em; font-size: 0.75em; cursor: pointer; }
-  .frogPond .frogs { border: 0.25em solid aqua; border-radius: 0.5em; margin: 0; padding: 0; }
-  .frogPond .frogs li { margin: 1em; padding: 0.25em; list-style: none; font-weight: bold; font-size: 1em; border-radius: 0.25em; }
-  .frogPond .m { color: darkblue; background-color: #1182ca; }
-  .frogPond .f { color: hotpink; background-color: #ffcccc; }
-</style>
-  
-<body> 
-<script>
-var performActions = function(e) { // Helper function for clicking buttons
-        switch(e.target.className) {
-          case 'add':
-            console.log('you hit add');
-            break;
-            
-          case 'kill':
-            console.log('you hit kill');
-            break;
-            
-          case 'breed':
-            console.log('you hit breed');
-            break;
+    <style>
+        html, body {
+            font-size: 16px;
         }
-      },
-    
-    Pond = function() { this.create(); };
-    Pond.prototype = function() {
-      var _body,
-          _frogs,
-          _actions, /* DOM element holders */
+        .frogPond {
+            background-color: #0071b9;
+            margin: 1em;
+            padding: 1em;
+            border: 0.125em solid aqua;
+            border-radius: 0.5em;
+        }
+        .frogPond h1 {
+            text-align: center;
+        }
+        .frogPond .actions {
+            margin: 1em 0 0 0;
+            padding: 0;
+        }
+        .frogPond .actions button {
+            display: inline-block;
+            margin: 0 0.75em 0 0;
+            background-color: aqua;
+            border: 0.125em solid darkblue;
+            padding: 0.25em;
+            border-radius: 0.25em;
+            font-size: 0.75em;
+            cursor: pointer;
+        }
+        .frogPond .frogs {
+            border: 0.25em solid aqua;
+            border-radius: 0.5em;
+            margin: 0;
+            padding: 0;
+        }
+        .frogPond .frogs li {
+            margin: 1em;
+            padding: 0.25em;
+            list-style: none;
+            font-weight: bold;
+            font-size: 1em;
+            border-radius: 0.25em;
+        }
+        .frogPond .m {
+            color: darkblue;
+            background-color: #1182ca;
+        }
+        .frogPond .f {
+            color: hotpink;
+            background-color: #ffcccc;
+        }
+    </style>
 
-          _pond,    /* reference to self */
-          Frogs,    /* Frogs in Pond */
-          
-          create = function() {
-            /* Set up DOM */
-            _body = document.createElement('div');
-            _body.className = 'frogPond';
-            _body.innerHTML = '<ul class="frogs"></ul><div class="actions"><button class="add">Add a Frog</button><button class="kill">Kill a frog</button><button class="breed">Encourage breeding</button></div>';
-            document.body.appendChild(_body);
-            _frogs = _body.getElementsByClassName('frogs')[0];
-            _actions = _body.getElementsByClassName('actions')[0];
-            /* End DOM Setup */
+    <body>
+        <script>
+            var performActions = function(e) { // Helper function for clicking buttons
+                switch (e.target.className) {
+                    case 'add':
+                        console.log('you hit add');
+                        console.log('giving birth to new frog');
+                        var newFrog = {
+                            name: prompt("What shall we call this one?"),
+                            gender: prompt("Type m if it's a he\n or\n type f if it's a she")
+                        };
+                        console.log("It's called " + newFrog.name + " and it's a " + newFrog.gender);
+                        frogPond.addFrog(
+                        new Frog(newFrog));
+                        break;
 
-            this.Frogs = [];
-            _pond = this;
-            
-            _actions.addEventListener('click', function(e) { performActions.call(_pond, e); }, false);
-            /* perform an action on this pond only */
-          },
-          
-          add = function(frogs) { /* accepts array of frogs or single frog */
-            if(frogs) {
-              if(!frogs.propertyIsEnumerable(length) && typeof frogs.splice !== "function") {
-                frogs = [frogs];
-              }
-            }
+                    case 'kill':
+                        console.log('you hit kill');
+                        frogPond.killFrog();
 
-            var i = 0,
-                l = frogs.length;
-              
-            for(; i < l; i++) {
-              this.addFrog(frogs[i]);
-            }
-          },
-          
-          addFrog = function(frog) {
-            /* only frogs allowed in this pond, this is a speciesist pond */
-            if(frog instanceof Frog) {
-              frog.setId(this.Frogs[this.Frogs.length - 1] ? this.Frogs[this.Frogs.length - 1].getId() + 1 : 1);
-              this.Frogs.push(frog);
-              
-              var _el = document.createElement('li');
-              _el.innerText = frog.name;
-              _el.className = frog.gender;
-              _el.setAttribute('data-frogid', frog.getId());
-              _frogs.appendChild(_el);
-            }
-          };
-      
-      return { create: create, add: add, addFrog: addFrog };
-    }(),
+                        break;
 
-    Frog = function(data) { this.birth(data); };
-    Frog.prototype = function() {
-      var _id,
-          name,
-          gender,
-          
-          birth = function(frogData) {
-            this.name = frogData.name;
-            this.gender = frogData.gender;
-          },
-          
-          setId = function(id) {
-            _id = parseInt(id);
-          },
+                    case 'breed':
+                        console.log('you hit breed');
+                        if(frogPond.Frogs.length > 1){
+                            console.log(frogPond.Frogs.length);
+                            var rand = Math.floor(Math.random()*10);
+                            console.log(rand);
+                            if(rand < 5){
+                                var newFrog = {
+                                    name: prompt("It's a girl! What shall we call her?"),
+                                    gender: "f"
+                        };
+                                frogPond.addFrog(new Frog(newFrog));
+                            }
+                            else if(rand >= 5){
+                                var newFrog = {
+                                    name: prompt("It's a boy! What shall we call him?"),
+                                    gender: "m"
+                        };
+                                frogPond.addFrog(new Frog(newFrog));
+                            }
+                        }
+                        else {
+                          alert("There's only one frog in the pond, you need more than one frog to breed");
+                        }
+                        break;
+                }
+            },
 
-          getId = function() {
-            return _id;
-          };
-      
-      return { birth: birth, setId: setId, getId: getId };
-    }();
+            Pond = function() {
+                this.create();
+            };
+            Pond.prototype = function() {
+                var _body,
+                _frogs,
+                _actions, /* DOM element holders */
+                _pond, /* reference to self */
+                Frogs, /* Frogs in Pond */
 
-var frogPond = new Pond();
-frogPond.add([
-  new Frog({ name: "Frank", gender: "m" }),
-  new Frog({ name: "Georgia", gender: "f" })
-]);
-</script>
+                create = function() {
+                    /* Set up DOM */
+                    _body = document.createElement('div');
+                    _body.className = 'frogPond';
+                    _body.innerHTML = '<ul class="frogs"></ul><div class="actions"><button class="add">Add a Frog</button><button class="kill">Kill a frog</button><button class="breed">Encourage breeding</button></div>';
+                    document.body.appendChild(_body);
+                    _frogs = _body.getElementsByClassName('frogs')[0];
+                    _actions = _body.getElementsByClassName('actions')[0];
+                    /* End DOM Setup */
+                    this.Frogs = [];
+                    _pond = this;
 
-</body>
+                    _actions.addEventListener('click', function(e) {
+                        performActions.call(_pond, e);
+                    }, false);
+                    /* perform an action on this pond only */
+                },
+
+                add = function(frogs) { /* accepts array of frogs or single frog */
+                    if (frogs) {
+                        if (!frogs.propertyIsEnumerable(length) && typeof frogs.splice !== "function") {
+                            frogs = [frogs];
+                        }
+                    }
+                    var i = 0,
+                        l = frogs.length;
+
+                    for (; i < l; i++) {
+                        this.addFrog(frogs[i]);
+                    }
+                },
+
+                addFrog = function(frog) {
+                    /* only frogs allowed in this pond, this is a speciesist pond */
+                    if (frog instanceof Frog) {
+                        frog.setId(this.Frogs[this.Frogs.length - 1] ? this.Frogs[this.Frogs.length - 1].getId() + 1 : 1);
+                        this.Frogs.push(frog);
+
+                        var _el = document.createElement('li');
+                        _el.innerText = frog.name;
+                        _el.className = frog.gender;
+                        _el.setAttribute('data-frogid', frog.getId());
+                        _el.id = frog.name;
+                        _frogs.appendChild(_el);
+                    }
+                },
+                killFrog = function() {
+                    if (this.Frogs.length > 0) {
+                        var killed = this.Frogs.pop();
+                        console.log(killed.name);
+                        var _el = document.getElementById(killed.name);
+                        _frogs.removeChild(_el);
+                    } else {
+                        alert("The pond is empty, add some frogs");
+                    }
+                };
+
+                return {
+                    create: create,
+                    add: add,
+                    addFrog: addFrog,
+                    killFrog: killFrog,
+                };
+            }(),
+            Frog = function(data) {
+                this.birth(data);
+            };
+            Frog.prototype = function() {
+                var _id,
+                name,
+                gender,
+
+                birth = function(frogData) {
+                    this.name = frogData.name;
+                    this.gender = frogData.gender;
+                },
+
+                setId = function(id) {
+                    _id = parseInt(id);
+                },
+                getId = function() {
+                    return _id;
+                };
+                /*death = function(){
+
+    };*/
+
+                return {
+                    birth: birth,
+                    setId: setId,
+                    getId: getId
+                };
+            }();
+            var frogPond = new Pond();
+            frogPond.add([
+            new Frog({
+                name: "Frank",
+                gender: "m"
+            }),
+            new Frog({
+                name: "Georgia",
+                gender: "f"
+            })]);
+        </script>
+    </body>
+
 </html>
